@@ -5,39 +5,54 @@ pipeline {
         maven 'Maven-3.9'
     }
 
+    environment {
+        APP_NAME = 'jenkins-java-demo'
+    }
+
     stages {
 
         stage('Checkout') {
             steps {
-                echo 'Cloning repository...'
+                echo "Build #${BUILD_NUMBER} started"
                 checkout scm
+            }
+        }
+
+        stage('Show Secret') {
+            steps {
+                withCredentials([
+                    string(
+                        credentialsId: 'my-first-secret',
+                        variable: 'MY_SECRET'
+                    )
+                ]) {
+                    sh 'echo "Secret value is: ${MY_SECRET}"'
+                    // Jenkins will print: Secret value is: ****
+                }
             }
         }
 
         stage('Compile') {
             steps {
-                echo 'Compiling the project...'
+                echo "Compiling ${APP_NAME}..."
                 sh 'mvn compile'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
                 sh 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
-                echo 'Packaging into JAR...'
                 sh 'mvn package -DskipTests'
             }
         }
 
         stage('Archive Artifact') {
             steps {
-                echo 'Archiving JAR file...'
                 archiveArtifacts artifacts: 'target/*.jar',
                                  fingerprint: true
             }
@@ -46,13 +61,13 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build Successful! JAR is ready.'
+            echo "✅ ${APP_NAME} build #${BUILD_NUMBER} successful!"
         }
         failure {
-            echo '❌ Build Failed! Check the logs.'
+            echo "❌ ${APP_NAME} build #${BUILD_NUMBER} failed!"
         }
         always {
-            echo 'Pipeline execution completed.'
+            echo 'Pipeline finished.'
         }
     }
 }
