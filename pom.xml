@@ -36,11 +36,16 @@
             </plugin>
 
             <!-- Checkstyle plugin → checks code quality -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.3.0</version>
-            </plugin>
+           <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-checkstyle-plugin</artifactId>
+    <version>3.3.0</version>
+    <configuration>
+        <configLocation>google_checks.xml</configLocation>
+        <failsOnError>false</failsOnError>         
+        <consoleOutput>true</consoleOutput>
+    </configuration>
+</plugin>
 
         </plugins>
     </build>
