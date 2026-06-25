@@ -22,7 +22,7 @@ pipeline {
             steps {
                 withCredentials([
                     string(
-                        credentialsId: 'my-first-secret',
+                        credentialsId: 'firstsecret',
                         variable: 'MY_SECRET'
                     )
                 ]) {
